@@ -14,12 +14,12 @@ jobs:
       - name: Run tests
         run: npm test
       - name: Build app
-        run: expo build:android && expo build:web
-      - name: Deploy to Expo
-        uses: expo/expo-action@v1
+        run: expo build:android && expo build:web  
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
         with:
+          eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
-          publish: android
       - name: Deploy to Netlify
         uses: actions/deploy@v1
         with:
