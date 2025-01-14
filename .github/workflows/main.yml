@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Run tests
         run: npm test
       - name: Build app
@@ -20,9 +20,12 @@ jobs:
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
+      - name: Install Netlify
+        run: npm install netlify-cli -g
       - name: Deploy to Netlify
-        uses: actions/deploy@v1
-        with:
-          provider: netlify
-          api_token: ${{ secrets.NETLIFY_TOKEN }}
-          publish_dir: ./web-build
+        id: netlify_deploy
+        run: |
+          netlify deploy \
+            --dir ./web-build \
+            --site ${{ secrets.NETLIFY_SITE_ID }} \
+            --auth ${{ secrets.NETLIFY_TOKEN }}
