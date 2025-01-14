@@ -1,0 +1,28 @@
+name: CI/CD for Expo App (Mobile & Web)
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test
+      - name: Build app
+        run: expo build:android && expo build:web
+      - name: Deploy to Expo
+        uses: expo/expo-action@v1
+        with:
+          token: ${{ secrets.EXPO_TOKEN }}
+          publish: android
+      - name: Deploy to Netlify
+        uses: actions/deploy@v1
+        with:
+          provider: netlify
+          api_token: ${{ secrets.NETLIFY_TOKEN }}
+          publish_dir: ./web-build
