@@ -6,8 +6,8 @@ on:
 
 jobs:
   build_test:
-    permissions:
-     contents: read
+    permissions:                # Job-level permissions configuration starts here
+     contents: write
      pages: write
      id-token: write
     runs-on: ubuntu-latest
