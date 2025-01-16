@@ -19,22 +19,6 @@ jobs:
       - name: Run tests
         run: yarn test
       ##todo coverage upload
-      - name: Archive build
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifact
-          path: .
-  # Deploy eas
-  deploy_android:
-    runs-on: ubuntu-latest
-    # Add a dependency to the build job
-    needs: build_test
-    # Specify runner + deployment step
-    steps:
-      - name: Download a single artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifact
       - name: Setup EAS
         uses: expo/expo-github-action@v8
         with:
@@ -42,17 +26,6 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
       - name: 🚀 Build app
         run: eas build --profile development --platform android --non-interactive --no-wait
-  # Deploy netlify
-  deploy_web:
-    runs-on: ubuntu-latest
-    # Add a dependency to the build job
-    needs: build_test
-    # Specify runner + deployment step
-    steps:
-      - name: Download a single artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifact
       - name: Install Netlify
         run: npm install netlify-cli -g
       - name: Build web
