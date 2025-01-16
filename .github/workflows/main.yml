@@ -32,9 +32,6 @@ jobs:
         with:
           # Upload the coverage directory from the repository
           path: './coverage/lcov-report'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1
       ##todo coverage upload
       - name: Setup EAS
         uses: expo/expo-github-action@v8
@@ -54,3 +51,29 @@ jobs:
             --dir ./dist \
             --site ${{ secrets.NETLIFY_SITE_ID }} \
             --auth ${{ secrets.NETLIFY_TOKEN }}
+
+    # Deploy job
+  deploy_coverage:
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
+    runs-on: ubuntu-latest
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    
+    # Add a dependency to the build job
+    needs: build_test
+    # Specify runner + deployment step
+    steps:
+    #  - name: Set env
+    #    run: |
+    #      npm i -g semver
+    #      echo "GITHUB_VERSION_BUILD=$(echo $(semver 0.1.1 -i prerelease --preid ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}))" >> $GITHUB_ENV
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+
