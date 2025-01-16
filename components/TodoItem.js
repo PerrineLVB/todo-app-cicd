@@ -7,7 +7,7 @@ import Checkbox from 'expo-checkbox';
 export default function TodoItem({ task, deleteTask, toggleCompleted }) {
   return (
     <View style={styles['todo-item']}>
-       <Checkbox value={task.completed} onValueChange={() => toggleCompleted(task.id)} testID='checkbox' data-testid="todo-item" />
+       <Checkbox value={task.completed} onValueChange={() => toggleCompleted(task.id)} testID='checkbox' />
 
       <Text style={[styles['todo-item-text'], task.completed && styles.completed]}>
         {task.text}

@@ -26,4 +26,11 @@ describe('TodoList', () => {
     fireEvent.press(deleteButton);
     expect(screen.queryByText('Doctor Appointment')).toBeFalsy()
   });
+
+  it('should toggle a task', async () => {
+    const { getAllByTestId } = render(<TodoList />);
+    const toggleButton = getAllByTestId('checkbox')[0]; // Assuming the first task has a delete button
+    fireEvent.press(toggleButton);
+    expect(screen.queryByText('Doctor Appointment')).toHaveStyle('text-decoration: line-through');
+  });
 });
