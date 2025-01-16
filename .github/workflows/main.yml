@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,6 +18,15 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run tests
         run: yarn test
+  # Deploy eas
+  deploy_android:
+    runs-on: ubuntu-latest
+    # Add a dependency to the build job
+    needs: build_test
+    # Specify runner + deployment step
+    steps:
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
       - name: Setup EAS
         uses: expo/expo-github-action@v8
         with:
@@ -25,6 +34,15 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
       - name: 🚀 Build app
         run: eas build --profile development --platform android --non-interactive --no-wait
+  # Deploy netlify
+  deploy_web:
+    runs-on: ubuntu-latest
+    # Add a dependency to the build job
+    needs: build_test
+    # Specify runner + deployment step
+    steps:
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
       - name: Install Netlify
         run: npm install netlify-cli -g
       - name: Build web
