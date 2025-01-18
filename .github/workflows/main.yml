@@ -37,7 +37,8 @@ jobs:
         with:
           start: yarn start
           browser: chrome
-          wait-on: 'http://localhost:8081'
+          wait-on: 'http://localhost:8081/'
+          wait-on-timeout: 180
         
   eas:
     runs-on: ubuntu-latest
