@@ -9,11 +9,13 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest --coverage",
-    "build-web": "expo export -p web"
+    "build-web": "expo export -p web",
+    "cypress": "cypress open"
   },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.0",
     "@testing-library/react-native": "^13.0.0",
+    "cypress": "^14.0.0",
     "expo": "~52.0.25",
     "expo-checkbox": "~4.0.1",
     "expo-status-bar": "~2.0.1",

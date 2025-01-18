@@ -39,8 +39,9 @@ export default function TodoList() {
         value={text}
         onChangeText={setText}
         placeholder="New Task"
+        id="task-input"
       />
-      <Button title="Add" onPress={addTask} />
+      <Button title="Add" onPress={addTask} id="add-button"/>
     </View>
   );
 }
