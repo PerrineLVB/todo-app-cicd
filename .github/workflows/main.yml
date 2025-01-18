@@ -32,6 +32,20 @@ jobs:
         with:
           # Upload the coverage directory from the repository
           path: './coverage/lcov-report'
+      - name: Run e2e tests with cypress
+        uses: cypress-io/github-action@v6
+        
+  eas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
       - name: Setup EAS
         uses: expo/expo-github-action@v8
         with:
@@ -39,6 +53,18 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
       - name: 🚀 Build app
         run: eas build --platform android --non-interactive --no-wait
+
+  netlify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
       - name: Install Netlify
         run: npm install netlify-cli -g
       - name: Build web
@@ -49,8 +75,7 @@ jobs:
           netlify deploy \
             --dir ./dist \
             --site ${{ secrets.NETLIFY_SITE_ID }} \
-            --auth ${{ secrets.NETLIFY_TOKEN }}
-
+            --auth ${{ secrets.NETLIFY_TOKEN }} 
     # Deploy job
   deploy_coverage:
     # Deploy to the github-pages environment
@@ -70,4 +95,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
-
