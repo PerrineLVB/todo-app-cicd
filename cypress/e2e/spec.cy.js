@@ -1,6 +1,6 @@
 describe('TodoList', () => {
     it('should allow checking a task, deleting a task, and creating a new task', () => {
-      cy.visit('http://localhost:8081/');
+      cy.visit('/');
       cy.contains('Doctor Appointment').should('exist');
       cy.get('[id="task-input"]').should('exist').type("Task 1");
 
