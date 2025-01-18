@@ -34,6 +34,10 @@ jobs:
           path: './coverage/lcov-report'
       - name: Run e2e tests with cypress
         uses: cypress-io/github-action@v6
+        with:
+          start: yarn start
+          browser: chrome
+          wait-on: 'http://localhost:8081'
         
   eas:
     runs-on: ubuntu-latest
