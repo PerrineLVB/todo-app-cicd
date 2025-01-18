@@ -37,6 +37,7 @@ jobs:
         
   eas:
     runs-on: ubuntu-latest
+    needs: build_test
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js 20
@@ -56,6 +57,7 @@ jobs:
 
   netlify:
     runs-on: ubuntu-latest
+    needs: build_test
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js 20
