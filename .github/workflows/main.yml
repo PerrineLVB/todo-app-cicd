@@ -1,104 +1,15 @@
-name: CI/CD for Expo App (Mobile & Web)
-
+name: CI
 on:
   push:
     branches: [ main ]
-
 jobs:
   build_test:
-    permissions:                # Job-level permissions configuration starts here
-     contents: write
-     pages: write
-     id-token: write
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 20
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: '20'
           cache: yarn
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Run tests
-        run: yarn test
-      - name: Setup Pages
-        uses: actions/configure-pages@v2
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          # Upload the coverage directory from the repository
-          path: './coverage/lcov-report'
-      - name: Run e2e tests with cypress
-        uses: cypress-io/github-action@v6
-        with:
-          start: yarn web
-          browser: chrome
-          wait-on: 'http://localhost:8081/'
-          wait-on-timeout: 180
-        
-  eas:
-    runs-on: ubuntu-latest
-    needs: build_test
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: yarn
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Setup EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-      - name: 🚀 Build app
-        run: eas build --platform android --non-interactive --no-wait
-
-  netlify:
-    runs-on: ubuntu-latest
-    needs: build_test
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: yarn
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Install Netlify
-        run: npm install netlify-cli -g
-      - name: Build web
-        run: yarn build-web
-      - name: Deploy to Netlify
-        id: netlify_deploy
-        run: |
-          netlify deploy \
-            --dir ./dist \
-            --site ${{ secrets.NETLIFY_SITE_ID }} \
-            --auth ${{ secrets.NETLIFY_TOKEN }} 
-    # Deploy job
-  deploy_coverage:
-    # Deploy to the github-pages environment
-    environment:
-      name: github-pages
-      url: ${{steps.deployment.outputs.page_url}}
-    runs-on: ubuntu-latest
-
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
-    permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
-    
-    # Add a dependency to the build job
-    needs: build_test
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+      - run: yarn install --frozen-lockfile
+      - run: npm test
